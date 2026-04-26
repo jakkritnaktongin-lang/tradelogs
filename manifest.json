@@ -2,7 +2,7 @@
   "name": "TradeLog — Trading Journal",
   "short_name": "TradeLog",
   "description": "Trading Journal & Performance Tracker",
-  "start_url": "./TradeLogV17.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0f1117",
   "theme_color": "#f5c842",
