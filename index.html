@@ -3113,14 +3113,12 @@ function showTradeDetail(id){
 
     ${hasAnyTags?`
     <div style="margin-bottom:16px;">
-      <div style="font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;font-family:'DM Mono',monospace;">Tags</div>
-      <div style="display:flex;flex-wrap:wrap;gap:6px;">
-        ${tagHtml(t.structTags,'#4d8eff')}
-        ${tagHtml(t.wyckoffTags,'#a78bfa')}
-        ${tagHtml(t.fiboTags,'#f59e0b')}
-        ${tagHtml(t.emoTags,'#f5c842')}
-        ${sessionTagHtml}
-      </div>
+      <div style="font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;font-family:'DM Mono',monospace;">Tags</div>
+      ${(t.structTags&&t.structTags.length)?`<div style="margin-bottom:8px;"><span style="font-size:10px;color:#4d8eff;font-family:'DM Mono',monospace;margin-right:6px;">⚡ Setup</span><div style="display:inline-flex;flex-wrap:wrap;gap:5px;">${tagHtml(t.structTags,'#4d8eff')}</div></div>`:''}
+      ${(t.wyckoffTags&&t.wyckoffTags.length)?`<div style="margin-bottom:8px;"><span style="font-size:10px;color:#a78bfa;font-family:'DM Mono',monospace;margin-right:6px;">📊 Wyckoff</span><div style="display:inline-flex;flex-wrap:wrap;gap:5px;">${tagHtml(t.wyckoffTags,'#a78bfa')}</div></div>`:''}
+      ${(t.fiboTags&&t.fiboTags.length)?`<div style="margin-bottom:8px;"><span style="font-size:10px;color:#f59e0b;font-family:'DM Mono',monospace;margin-right:6px;">📐 Fibonacci</span><div style="display:inline-flex;flex-wrap:wrap;gap:5px;">${tagHtml(t.fiboTags,'#f59e0b')}</div></div>`:''}
+      ${(t.emoTags&&t.emoTags.length)?`<div style="margin-bottom:8px;"><span style="font-size:10px;color:#f5c842;font-family:'DM Mono',monospace;margin-right:6px;">🧠 Emotion</span><div style="display:inline-flex;flex-wrap:wrap;gap:5px;">${tagHtml(t.emoTags,'#f5c842')}</div></div>`:''}
+      ${(t.sessionTags&&t.sessionTags.length)?`<div style="margin-bottom:8px;"><span style="font-size:10px;color:var(--dim);font-family:'DM Mono',monospace;margin-right:6px;">🕐 Session</span><div style="display:inline-flex;flex-wrap:wrap;gap:5px;">${sessionTagHtml}</div></div>`:''}
     </div>`:''}
 
     ${t.analysis?`<div style="margin-bottom:12px;"><div style="font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;font-family:'DM Mono',monospace;">Technical Analysis</div><div style="background:var(--ink3);border:1px solid var(--line);border-radius:8px;padding:12px;font-size:13px;color:var(--text);line-height:1.6;white-space:pre-wrap;">${t.analysis}</div></div>`:''}
@@ -3194,16 +3192,40 @@ document.addEventListener('DOMContentLoaded',()=>{
 // ═══════════════════════════════════════════
 // MULTI-USER CONFIG
 // ═══════════════════════════════════════════
-const API_URL   = 'https://script.google.com/macros/s/AKfycbxZ6bZ4x_cgKHYlHBilhAVJO5tgytAhlxP5dJ7zDyxSUM7vLavDnn7vODSgbyJu8DYt/exec';
+const API_URL   = 'https://script.google.com/macros/s/AKfycbxWWlW8__qGaI8jW03uss1v08CY14ENKBZiizt4tOmte3GWxDUKyfyd4nkOwjUG3X3U/exec';
 const API_SECRET = '180243';
 
 var currentUser = null; // { username, role }
 
-// ─── API helper ───────────────────────────
-async function api(params) {
-  var qs = Object.keys(params).map(k => k + '=' + encodeURIComponent(params[k])).join('&');
-  var res = await fetch(API_URL + '?' + qs);
-  return await res.json();
+// ─── API helper (CORS-safe via script tag for GET) ───────────
+function api(params) {
+  return new Promise(function(resolve, reject) {
+    var cbName = '_cb_' + Date.now() + '_' + Math.floor(Math.random()*10000);
+    params.callback = cbName;
+    var qs = Object.keys(params).map(function(k){ return k + '=' + encodeURIComponent(params[k]); }).join('&');
+    
+    var script = document.createElement('script');
+    var timer = setTimeout(function() {
+      delete window[cbName];
+      if(script.parentNode) script.parentNode.removeChild(script);
+      reject(new Error('timeout'));
+    }, 15000);
+    
+    window[cbName] = function(data) {
+      clearTimeout(timer);
+      delete window[cbName];
+      if(script.parentNode) script.parentNode.removeChild(script);
+      resolve(data);
+    };
+    
+    script.src = API_URL + '?' + qs;
+    script.onerror = function() {
+      clearTimeout(timer);
+      delete window[cbName];
+      reject(new Error('Script load failed'));
+    };
+    document.head.appendChild(script);
+  });
 }
 
 
@@ -3353,14 +3375,13 @@ async function syncToSheets() {
   if (!currentUser) return;
   setSyncStatus('⬆️ กำลัง sync...', 'var(--gold)');
   try {
-    // ใช้ GET + encode value ผ่าน URL (Apps Script ไม่รับ POST body จาก browser ตรงๆ)
-    var qs = 'action=save'
-      + '&secret=' + encodeURIComponent(API_SECRET)
-      + '&username=' + encodeURIComponent(currentUser.username)
-      + '&password=' + encodeURIComponent(currentUser.password)
-      + '&value=' + encodeURIComponent(JSON.stringify(db));
-    var res = await fetch(API_URL + '?' + qs);
-    var json = await res.json();
+    var json = await api({
+      action: 'save',
+      secret: API_SECRET,
+      username: currentUser.username,
+      password: currentUser.password,
+      value: JSON.stringify(db)
+    });
     if (json.ok) {
       var t = new Date().toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'});
       setSyncStatus('✅ Synced ' + t, 'var(--green)');
