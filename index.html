@@ -1069,33 +1069,43 @@ body.light-mode .modal   { background:#fff; }
     <input type="file" id="importInput" accept=".json" style="display:none" onchange="importData(this)">
 
     <div class="sidebar-bottom">
-      <div class="account-box" onclick="openAccountModal()" style="cursor:pointer">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-        <div class="account-label" style="margin-bottom:0;">Account</div>
-        <button onclick="openAdminPanel()" id="adminBtn" style="display:none;font-size:10px;background:rgba(245,200,66,0.1);border:1px solid rgba(245,200,66,0.3);color:var(--gold);border-radius:4px;padding:2px 7px;cursor:pointer;font-family:'DM Mono',monospace;">⚙ Admin</button>
-      </div>
-      <div class="account-label" style="margin-top:0;">Account</div>
-        <div style="font-size:10px;color:var(--dim);font-family:'DM Mono',monospace;margin-bottom:4px;" id="sideUsername">—</div>
+
+      <!-- Settings group -->
+      <div class="nav-label">Settings</div>
+      <button class="nav-btn" onclick="openReminderSettings()" id="reminderNavBtn">
+        <span class="icon">🔔</span><span class="nav-text">Trade Reminder</span>
+      </button>
+      <button class="nav-btn" onclick="document.getElementById('ddSettingsOverlay').style.display='flex'">
+        <span class="icon">⚠️</span><span class="nav-text">Drawdown Alert</span>
+      </button>
+      <button class="nav-btn" onclick="installPWA()" id="pwaInstallBtn" style="display:none;">
+        <span class="icon">📲</span><span class="nav-text">ติดตั้งแอป</span>
+      </button>
+
+      <!-- Divider -->
+      <div style="height:1px;background:var(--line);margin:10px 0;"></div>
+
+      <!-- Account box -->
+      <div class="account-box" onclick="openAccountModal()" style="cursor:pointer;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+          <div style="font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;font-family:'DM Mono',monospace;">Account</div>
+          <button onclick="event.stopPropagation();openAdminPanel()" id="adminBtn" style="display:none;font-size:10px;background:rgba(245,200,66,0.1);border:1px solid rgba(245,200,66,0.3);color:var(--gold);border-radius:4px;padding:2px 7px;cursor:pointer;font-family:'DM Mono',monospace;">⚙ Admin</button>
+        </div>
+        <div style="font-size:10px;color:var(--dim);font-family:'DM Mono',monospace;margin-bottom:2px;" id="sideUsername">—</div>
         <div class="account-name" id="sideAccName">Main</div>
         <div class="account-balance" id="sideAccBalance">$0</div>
         <div class="account-change" id="sideAccChange"></div>
       </div>
+
+      <!-- User actions -->
+      <button class="nav-btn" onclick="openChangePass()" style="margin-top:6px;">
+        <span class="icon">🔑</span><span class="nav-text">เปลี่ยนรหัสผ่าน</span>
+      </button>
+      <button class="nav-btn" onclick="doLogout()" style="margin-top:4px;color:var(--red);">
+        <span class="icon">🚪</span><span class="nav-text">ออกจากระบบ</span>
+      </button>
+
     </div>
-      <button class="nav-btn" onclick="openReminderSettings()" style="margin-top:4px;" id="reminderNavBtn">
-      <span class="icon">🔔</span><span class="nav-text">Trade Reminder</span>
-    </button>
-    <button class="nav-btn" onclick="document.getElementById('ddSettingsOverlay').style.display='flex'" style="margin-top:4px;">
-      <span class="icon">⚠️</span><span class="nav-text">Drawdown Alert</span>
-    </button>
-    <button class="nav-btn" onclick="installPWA()" id="pwaInstallBtn" style="margin-top:4px;display:none;">
-      <span class="icon">📲</span><span class="nav-text">ติดตั้งแอป</span>
-    </button>
-    <button class="nav-btn" onclick="openChangePass()" style="margin-top:4px;">
-      <span class="icon">🔑</span><span class="nav-text">เปลี่ยนรหัสผ่าน</span>
-    </button>
-    <button class="nav-btn" onclick="doLogout()" style="margin-top:4px;">
-      <span class="icon">🚪</span><span class="nav-text">ออกจากระบบ</span>
-    </button>
   </aside>
 
   <!-- Main -->
