@@ -58,56 +58,59 @@ body::before {
 
 /* ── Sidebar ── */
 .sidebar {
-  width: 240px;
-  min-width: 240px;
+  width: 200px;
+  min-width: 200px;
   background: var(--ink2);
   border-right: 1px solid var(--line);
   display: flex;
   flex-direction: column;
-  padding: 28px 20px;
-  gap: 6px;
+  padding: 16px 12px;
+  gap: 2px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 .brand {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 30px;
+  gap: 8px;
+  margin-bottom: 14px;
   padding: 0 4px;
 }
 .brand-icon {
-  width: 36px; height: 36px;
+  width: 28px; height: 28px;
   background: var(--gold);
-  border-radius: 10px;
+  border-radius: 8px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 18px;
+  font-size: 14px;
+  flex-shrink: 0;
 }
-.brand-name { font-size: 16px; font-weight: 700; color: var(--bright); letter-spacing: -0.3px; }
-.brand-sub { font-size: 10px; color: var(--dim); font-family: 'DM Mono', monospace; letter-spacing: 1px; text-transform: uppercase; }
+.brand-name { font-size: 14px; font-weight: 700; color: var(--bright); letter-spacing: -0.3px; }
+.brand-sub { font-size: 9px; color: var(--dim); font-family: 'DM Mono', monospace; letter-spacing: 1px; text-transform: uppercase; }
 
-.nav-label { font-size: 10px; color: var(--dim); letter-spacing: 1.5px; text-transform: uppercase; font-family: 'DM Mono', monospace; padding: 16px 8px 8px; }
+.nav-label { font-size: 9px; color: var(--dim); letter-spacing: 1.5px; text-transform: uppercase; font-family: 'DM Mono', monospace; padding: 10px 6px 4px; }
 .nav-btn {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 12px;
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 8px;
   border-radius: var(--radius-sm);
   border: none; background: transparent;
-  color: var(--muted); font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 500;
+  color: var(--muted); font-family: 'Sora', sans-serif; font-size: 12px; font-weight: 500;
   cursor: pointer; transition: all 0.18s; text-align: left; width: 100%;
 }
 .nav-btn:hover { color: var(--text); background: var(--ink3); }
-.nav-btn.active { color: var(--bright); background: var(--ink3); border-left: 2px solid var(--gold); padding-left: 10px; }
-.nav-btn .icon { font-size: 16px; width: 20px; text-align: center; }
+.nav-btn.active { color: var(--bright); background: var(--ink3); border-left: 2px solid var(--gold); padding-left: 6px; }
+.nav-btn .icon { font-size: 14px; width: 18px; text-align: center; flex-shrink:0; }
 
-.sidebar-bottom { margin-top: auto; }
+.sidebar-bottom { margin-top: auto; padding-top: 8px; }
 .account-box {
   background: var(--ink3);
   border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 14px;
+  border-radius: var(--radius-sm);
+  padding: 10px;
 }
-.account-label { font-size: 10px; color: var(--dim); font-family: 'DM Mono', monospace; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
-.account-name { font-size: 13px; font-weight: 600; color: var(--bright); margin-bottom: 2px; }
-.account-balance { font-size: 20px; font-weight: 700; color: var(--gold); font-family: 'DM Mono', monospace; }
-.account-change { font-size: 11px; font-family: 'DM Mono', monospace; margin-top: 4px; }
+.account-label { font-size: 9px; color: var(--dim); font-family: 'DM Mono', monospace; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+.account-name { font-size: 12px; font-weight: 600; color: var(--bright); margin-bottom: 1px; }
+.account-balance { font-size: 16px; font-weight: 700; color: var(--gold); font-family: 'DM Mono', monospace; }
+.account-change { font-size: 10px; font-family: 'DM Mono', monospace; margin-top: 2px; }
 
 /* ── Main ── */
 .main {
